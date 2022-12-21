@@ -20,3 +20,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.collection-grid {
+    margin-top: 5%;
+}
+.ms-n5 {
+    margin-left: -40px;
+}

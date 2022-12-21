@@ -1,9 +1,59 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model CollectionViewModel
+
+<form asp-action="Index" method="post" role="form">
+    <div class="row">
+        <div class="col-md-5 mx-auto">
+            <div class="small fw-light">Find your favortie Album, Artist or Game</div>
+            <div class="input-group">
+                <input asp-for="SearchQuery" class="form-control border-end-0 border rounded-pill" type="search">
+                <span class="input-group-append">
+                    <button class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="row">
+            <div class="col-md-6">
+                <input asp-for="SearchQuery" class="form-control" />
+                <span asp-validation-for="SearchQuery" class="text-danger"></span>
+            </div>
+            <div class="col-md-offset-2 col-md-5">
+                <input type="submit" class="btn btn-secondary" value="Search" />
+            </div>
+        </div>*@
+
+</form>
+
+@if (Model.Collections.Count() > 0)
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4 collection-grid">
+        @foreach(var collection in Model.Collections)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <img src="@collection.ArtworkUrl100" class="card-img-top" alt="@collection.CollectionName image" />
+                    <div class="card-body">
+                        <h5 class="card-title">@collection.CollectionName</h5>                    
+                        <a class="btn btn-primary stretched-link"
+                           asp-action="VisitCollection"
+                           asp-route-id="@collection.CollectionId"
+                           asp-route-url="@collection.CollectionViewUrl">GO.!!
+                           @if(collection.ClickCount > 0) 
+                           {
+                                var times = collection.ClickCount == 1 ? "time" : "times";
+                                var spanMessage = $"visited {collection.ClickCount} {times}";
+                                <span class="badge badge-light">@spanMessage</span>
+                           }
+                        </a>
+                    </div>                                      
+                </div>
+            </div>
+        }
+    </div>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
 
