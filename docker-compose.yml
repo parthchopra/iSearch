@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+
+  collection.db:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+
+  isearch:
+    image: ${DOCKER_REGISTRY-}isearch
+    build:
+      context: .
+      dockerfile: iSearch/Dockerfile
+    depends_on:
+      - collection.db
