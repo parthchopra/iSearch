@@ -1,0 +1,39 @@
+version: '3.9'
+
+volumes:
+  collection-sqldata:
+    external: false
+
+services:
+
+  collection.db:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: collection_sql_edge
+    ports:
+      - "1433:1433"
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    volumes:
+      - collection-sqldata:/var/opt/mssql
+    
+
+  isearch:
+    image: ${DOCKER_REGISTRY-}isearch    
+    build:
+      context: .
+      dockerfile: iSearch/Dockerfile
+    container_name: isearch
+    environment:
+      - ConnectionStrings__collectionDbContextConnection=Server=collection.db;Database=MediaCollection;User Id=sa;Password=Pass@word;Encrypt=False;TrustServerCertificate=True;
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "5292:80"
+      - "7140:443"
+    volumes:
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+    depends_on:
+      - collection.db
+    command: ["dotnet", "ef", "database update"]    
