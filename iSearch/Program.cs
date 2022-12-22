@@ -1,4 +1,5 @@
-﻿using iSearch.Models;
+﻿using iSearch.Migrations;
+using iSearch.Models;
 using iSearch.Repositories;
 using iSearch.Services;
 using Microsoft.EntityFrameworkCore;
@@ -37,5 +38,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+DatabaseManagementService.MigrateDatabase(app);
 app.Run();
 
